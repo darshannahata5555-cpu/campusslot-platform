@@ -69,28 +69,28 @@ The repository includes a Render Blueprint in `render.yaml`. It deploys **one No
 
 Render binds the application to `0.0.0.0` using its provided `PORT`. Only one trusted reverse proxy is configured in production. Shutdown closes HTTP connections and MongoDB cleanly. If you scale to multiple application instances, use a shared rate-limit store; reservation correctness already relies on MongoDB and remains safe across instances.
 
-Deployment references: [Render Express guide](https://render.com/docs/deploy-node-express-app), [Render web services](https://render.com/docs/web-services), [Mongoose transaction API](https://mongoosejs.com/docs/api/connection.html#Connection.prototype.transaction()).
+Deployment references: [Render Express guide](https://render.com/docs/deploy-node-express-app), [Render web services](https://render.com/docs/web-services), [Mongoose transaction API](<https://mongoosejs.com/docs/api/connection.html#Connection.prototype.transaction()>).
 
 ## API reference
 
 All responses are JSON. Errors use `{ "error": "human-readable message" }`. Mutating requests use `Content-Type: application/json` and the configured `Origin`. Authentication uses the session cookie, not localStorage.
 
-| Method | Endpoint | Access / input |
-| --- | --- | --- |
-| GET | `/api/health` | Public readiness |
-| GET | `/api/equipment?q=&category=` | Public catalog and reserved windows |
-| POST | `/api/auth/register` | `{ name, email, password }`, student only |
-| POST | `/api/auth/login` | `{ email, password }` |
-| POST | `/api/auth/logout` | Revokes current session |
-| GET | `/api/auth/me` | Current authenticated user |
-| POST | `/api/reservations` | Student: `{ equipment, purpose, start, end }`; ISO-8601 timestamps with offset |
-| GET | `/api/reservations?q=&status=&page=1` | Students: own; staff: all; 20 per page |
-| POST | `/api/reservations/:id/cancel` | Owner or staff; pending/approved |
-| POST | `/api/reservations/:id/approve` | Staff; `{ note? }` |
-| POST | `/api/reservations/:id/reject` | Staff; `{ note? }` |
-| POST | `/api/reservations/:id/checkout` | Staff; `{ note? }` |
-| POST | `/api/reservations/:id/return` | Staff; `{ note? }` |
-| GET | `/api/activity?page=1&reservation=` | Students: own; staff: all; 30 per page |
+| Method | Endpoint                              | Access / input                                                                 |
+| ------ | ------------------------------------- | ------------------------------------------------------------------------------ |
+| GET    | `/api/health`                         | Public readiness                                                               |
+| GET    | `/api/equipment?q=&category=`         | Public catalog and reserved windows                                            |
+| POST   | `/api/auth/register`                  | `{ name, email, password }`, student only                                      |
+| POST   | `/api/auth/login`                     | `{ email, password }`                                                          |
+| POST   | `/api/auth/logout`                    | Revokes current session                                                        |
+| GET    | `/api/auth/me`                        | Current authenticated user                                                     |
+| POST   | `/api/reservations`                   | Student: `{ equipment, purpose, start, end }`; ISO-8601 timestamps with offset |
+| GET    | `/api/reservations?q=&status=&page=1` | Students: own; staff: all; 20 per page                                         |
+| POST   | `/api/reservations/:id/cancel`        | Owner or staff; pending/approved                                               |
+| POST   | `/api/reservations/:id/approve`       | Staff; `{ note? }`                                                             |
+| POST   | `/api/reservations/:id/reject`        | Staff; `{ note? }`                                                             |
+| POST   | `/api/reservations/:id/checkout`      | Staff; `{ note? }`                                                             |
+| POST   | `/api/reservations/:id/return`        | Staff; `{ note? }`                                                             |
+| GET    | `/api/activity?page=1&reservation=`   | Students: own; staff: all; 30 per page                                         |
 
 Status values: `pending`, `approved`, `checked_out`, `returned`, `rejected`, `cancelled`; reservation filtering also accepts `overdue`. Use `{}` as the body for actions without notes.
 
