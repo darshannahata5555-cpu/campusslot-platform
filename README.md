@@ -62,9 +62,9 @@ The repository includes a Render Blueprint in `render.yaml`. It deploys **one No
 
 1. Push this repository to GitHub.
 2. In Render, choose **New → Blueprint**, connect the repository, and select `render.yaml`. Alternatively create a Node web service with build command `npm ci && npm run build`, start command `npm start`, and health path `/api/health`.
-3. Set `MONGODB_URI` to your Atlas URI, `NODE_ENV=production`, and `APP_ORIGIN` to the exact HTTPS Render URL, **without a trailing slash**, e.g. `https://your-campus-app.onrender.com`. If you add a custom domain, update `APP_ORIGIN` to its canonical origin and use that domain consistently.
+3. Set `MONGODB_URI` to your Atlas URI and `NODE_ENV=production`. The app uses Render's `RENDER_EXTERNAL_URL` as its allowed origin automatically. If you add a custom domain, set `APP_ORIGIN` to its exact canonical HTTPS origin **without a trailing slash**, and use that domain consistently.
 4. In Atlas Network Access, allow the outbound IP ranges shown for this Render service. Keep the database user scoped to the application database.
-5. Seed and create staff from your local terminal against the **same Atlas database**, using `npm run seed` and `npm run create-staff`. These commands are separate from deploys so every restart does not reseed or reset accounts.
+5. The Blueprint starts with `npm run seed && npm start`, ensuring the six equipment items exist in Atlas. Seeding is idempotent and never resets existing records or accounts. Create staff from your local terminal against the **same Atlas database**, using `npm run create-staff`. Staff creation is never run automatically during deployment.
 6. Deploy, then confirm `/api/health` returns `{ "status": "ok" }`. Register a student and test request → approval → checkout during the booked window → return → activity history.
 
 Render binds the application to `0.0.0.0` using its provided `PORT`. Only one trusted reverse proxy is configured in production. Shutdown closes HTTP connections and MongoDB cleanly. If you scale to multiple application instances, use a shared rate-limit store; reservation correctness already relies on MongoDB and remains safe across instances.

@@ -2,6 +2,8 @@ import { connectDB } from "./db.js";
 import { app } from "./app.js";
 import mongoose from "mongoose";
 try {
+  // Render provides the exact service URL, including any generated suffix.
+  process.env.APP_ORIGIN ||= process.env.RENDER_EXTERNAL_URL;
   if (
     process.env.NODE_ENV === "production" &&
     !/^https:\/\//.test(process.env.APP_ORIGIN || "")

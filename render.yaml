@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     buildCommand: npm ci && npm run build
-    startCommand: npm start
+    startCommand: npm run seed && npm start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
@@ -12,6 +12,4 @@ services:
       - key: NODE_VERSION
         value: 22.16.0
       - key: MONGODB_URI
-        sync: false
-      - key: APP_ORIGIN
         sync: false
